@@ -10,3 +10,4 @@ use App\Http\Controllers\UserController;
 Route::get('/', [UserController::class, 'index'])->name('user.index');
 Route::post('/', [UserController::class, 'store'])->name('user.store');
 Route::get('req/{id}', [UserController::class, 'ticket'])->name('user.ticket');
+Route::post('checkout/{id}', [UserController::class, 'checkOut'])->name('user.checkout');
