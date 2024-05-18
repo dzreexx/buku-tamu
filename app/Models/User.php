@@ -23,7 +23,8 @@ class User extends Authenticatable
         'nik',
         'ket',
         'check_in_at',
-        'check_out_at'
+        'check_out_at',
+        'selfie_path', // Tambahkan kolom selfie_path
     ];
     public function ticket()
     {

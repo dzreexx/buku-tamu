@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->bigInteger('telp')->unique();
-            $table->bigInteger('nik')->unique();
+            $table->bigInteger('telp');
+            $table->bigInteger('nik');
             $table->text('ket');
+            $table->text('selfie_path'); // Tambahkan kolom untuk menyimpan path gambar selfie
             $table->timestamp('email_verified_at')->nullable();
             // $table->string('password');
             $table->rememberToken();
