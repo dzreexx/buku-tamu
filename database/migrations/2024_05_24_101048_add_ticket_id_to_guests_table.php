@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->timestamp('check_in_at')->nullable();
-            $table->timestamp('check_out_at')->nullable();
+        Schema::table('guests', function (Blueprint $table) {
+            $table->foreignId('ticket_id')->nullable()->constrained()->onDelete('cascade');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('guests', function (Blueprint $table) {
             //
         });
     }
