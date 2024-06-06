@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DeviceController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -9,4 +10,6 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', [UserController::class, 'index'])->name('user.index');
 Route::post('/', [UserController::class, 'store'])->name('user.store');
-Route::get('req/', [UserController::class, 'ticket'])->name('user.ticket');
+Route::get('req/{id}', [UserController::class, 'ticket'])->name('user.ticket');
+Route::post('checkout/{id}', [UserController::class, 'checkOut'])->name('user.checkout');
+Route::get('device-check', [DeviceController::class, 'detectDevice'])->name('device.check');

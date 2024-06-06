@@ -18,10 +18,18 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'nama',
+        'ticket_id',
         'telp',
         'nik',
         'ket',
+        'check_in_at',
+        'check_out_at',
+        'selfie_path', // Tambahkan kolom selfie_path
     ];
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

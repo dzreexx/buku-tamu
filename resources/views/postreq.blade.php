@@ -11,15 +11,46 @@
 <body>
     <div class="flex justify-center items-center h-screen">
         <div class="card w-96 bg-base-100 shadow-xl">
-            <figure><img src="{{ asset('images/logotni.png') }}" class="" alt="TNI AL" /></figure>
+            <figure><img src="{{ asset('images/logomabestni.png') }}" class="size-2/3" alt="TNI AL" /></figure>
+            <div class="card-body flex items-center justify-center">
+                <h2 class="card-title">TAMU</h2>
+                <h2 class="card-title">MABESAL</h2>
+                <h2 class="card-title">{{ $user->ticket->number }}</h2>
+                <p class="mt-4">Serahkan device ini ke petugas</p>
+                <p class="mt-4">dan ambil kartu anda</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex justify-center items-center h-screen">
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <figure><img src="{{ asset('storage/' . $user->selfie_path) }}" alt="Selfie" /></figure>
             <div class="card-body">
-                <h2 class="card-title">Kartu kamu P023</h2>
-                <p>Serahkan device ini ke petugas{{ $nama }}</p>
-                <div class="card-actions justify-end">
-                    <button class="btn btn-error">Keluar</button>
+                <ul class="list-none p-0">
+                    <li class="flex justify-between border-b border-gray-300 py-2">
+                        <span class="font-bold">Nama:</span>
+                        <span>{{ $user->nama }}</span>
+                    </li>
+                    <li class="flex justify-between border-b border-gray-300 py-2">
+                        <span class="font-bold">Telp:</span>
+                        <span>0{{ $user->telp }}</span>
+                    </li>
+                    <li class="flex justify-between border-b border-gray-300 py-2">
+                        <span class="font-bold">Nik:</span>
+                        <span>{{ $user->nik }}</span>
+                    </li>
+                </ul>
+                <p class="mt-4 font-bold">Keterangan: </p>
+                <p>{{ $user->ket }}</p>
+                <div class="card-actions justify-between mt-4">
+                    <form action="{{ route('user.checkout', ['id' => $user->id]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-error">Keluar</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+    
+    
 </body>
 </html>
