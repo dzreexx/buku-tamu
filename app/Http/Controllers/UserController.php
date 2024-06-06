@@ -23,7 +23,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function ticket(Request $request)
+    public function ticket($id)
     {
         $user = User::findOrFail($id);
         return view('postreq', [
@@ -47,7 +47,7 @@ class UserController extends Controller
         'telp' => 'required',
         'nik' => ['required', 'numeric'],
         'ket' => 'required',
-        'selfie' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // atur sesuai kebutuhan
+        'selfie' => 'required|image|mimes:jpeg,png,jpg,gif|max:10000', // atur sesuai kebutuhan
     ]);
 
     // Proses upload selfie
