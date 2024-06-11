@@ -13,6 +13,6 @@ class Ticket extends Model
 
     public function guest()
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(Guest::class);
     }
 }
