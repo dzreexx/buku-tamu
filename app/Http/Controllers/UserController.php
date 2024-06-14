@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Guest;
 use App\Models\News;
+use App\Models\Info;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Ticket;
@@ -161,6 +162,9 @@ public function main()
     return view('main-user',[
         'title' => 'Halaman Utama',
         'page' => 'Beranda',
+        'judul' => 'Selamat Datang',
+        'desc' => '',
+        'thumbnail' => 'images/disinfolahtal.png',
         'user' => Auth::user(),
         'news' => $news,
     ]);
@@ -168,11 +172,13 @@ public function main()
 
 public function berita($id)
 {
-    $berita = News::find($id);
+    $berita = News::with('user')->findOrFail($id);
+    $berita->formatted_date = Carbon::parse($berita->created_at)->translatedFormat('l, d F Y');
 
     return view('user-news',[
         'title' => 'Baca Berita',
         'page' => 'Berita',
+        'judul' => 'Berita',
         'berita' => $berita,
     ]);
 }
@@ -184,6 +190,7 @@ public function kunjungan()
     return view('kunjungan',[
         'title' => 'Kunjungan',
         'page' => 'Kunjungan',
+        
     ],compact('guests'));
 }
 
@@ -357,14 +364,25 @@ public function updateProfile(Request $request)
         return view('about', [
             'title' => 'Halaman Tentang',
             'page' => 'Tentang',
+            'judul' => 'Tentang',
+            'desc' => '',
+            'thumbnail' => 'images/tentang.jpeg',
         ]);
     }
     
     public function info()
     {
+        $infos = Info::latest()->get()->all();
+        foreach ($infos as $info) {
+            $info->formattedDate = Carbon::parse($info->tanggal)->locale('id')->isoFormat('dddd, D MMMM YYYY');
+        }
         return view('info', [
             'title' => 'Halaman Informasi',
             'page' => 'Informasi',
+            'judul' => 'Informasi',
+            'desc' => '',
+            'thumbnail' => 'images/informasi.jpeg',
+            'infos' => $infos,
         ]);
     }
     /**

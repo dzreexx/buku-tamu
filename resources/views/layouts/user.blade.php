@@ -75,13 +75,15 @@
                   <a href="/login" class="btn btn-primary">Masuk</a>
                 </div>
                 @endif
-                <div id="menu-profile" class="hidden absolute z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                <div id="menu-profile" class="hidden absolute z-10 mt-2 w-48 left-auto right-0 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                   <a href="/user/profile" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Profil</a>
                   <form action="/logout" method="post">
                     @csrf
                     <a href="" class="block px-4 py-2 text-sm text-gray-700">
-                        <button type="submit">Keluar</button>
-                    </a>
+                    <button type="submit" class="w-full text-left">
+                          Keluar
+                        </button>
+                      </a>
                   </form>
                 </div>
                 <div id="menu-profile-admin" class="hidden absolute z-10 mt-2 w-48 left-auto right-0 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
@@ -89,8 +91,10 @@
                   <form action="/logout" method="post">
                     @csrf
                     <a href="" class="block px-4 py-2 text-sm text-gray-700">
-                        <button type="submit">Keluar</button>
-                    </a>
+                    <button type="submit" class="w-full text-left">
+                          Keluar
+                        </button>
+                      </a>
                   </form>
                 </div>
               </div>
@@ -166,19 +170,59 @@
             @endif
           </div>
       </div>
+      @if(!empty($thumbnail))
+      <div class="hero min-h-full h-80 bg-cover bg-center" style="background-image: url('{{ $thumbnail }}');">
+        <div class="hero-overlay bg-gradient-to-b from-black/60"></div>
+        <div class="hero-content text-center text-neutral-content">
+            <div class="max-w-md">
+                <h1 class="mb-5 text-5xl font-bold">{{ $judul }}</h1>
+                <p class="mb-5">{{ $desc }}</p>
+            </div>
+        </div>
+    </div>
+    @endif
     </nav>
   
-    <header class="bg-white shadow">
+    {{-- <header class="bg-white shadow">
       <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ $page }}</h1>
       </div>
-    </header>
+    </header> --}}
     <main>
       <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
             @yield('content')
       </div>
     </main>
   </div>
+@if (!empty($judul))
+  <tr>
+    <td valign="middle" height="200">
+        <!--
+        <img src="https://www.tnial.mil.id/images/footer.png" width="100%" />-->
+        <div align="center" class="pt-5" style="font-size:13px;background-color:#E9ECF3;">	
+            
+            <div class="flex justify-center">
+                
+                    <hr class="thin bg-grayLighter"><br>
+                    <a href="http://www.tni.mil.id" target="_blank">
+                    <img alt="MABES TNI" src="https://www.tnial.mil.id/images/logo_tni.png" style="height:40px; width:40px">
+                    </a>&nbsp;    
+                    <a href="http://www.tnial.mil.id" target="_blank">
+                    <img alt="TNI AL" src="https://www.tnial.mil.id/images/logo_tnial.png" style="height:42px; width:40px">
+                    </a>&nbsp;                                                               
+                    <a href="http://www.tniau.mil.id" target="_blank">
+                    <img alt="TNI AU" src="https://www.tnial.mil.id/images/logo_tniau.png" style="height:40px; width:40px">
+                    </a>&nbsp;                    
+                    <a href="http://www.tniad.mil.id" target="_blank">
+                    <img alt="TNI AD" src="https://www.tnial.mil.id/images/logo_tniad.png" style="height:40px; width:35px">
+                    </a>  <br>
+            </div><br>
+                
+            <strong>Copyright © Tentara Nasional Indonesia Angkatan Laut</strong>
+            <br><br>Komplek Militer Cilangkap, Cilangkap, Cipayung, Kota Jakarta Timur<br> Daerah Khusus Ibukota Jakarta 13870<br><br>Kontak Kami:<br> Email. dispenal@tnial.mil.id <br>Telp. (021) 8723308<br>Hp. +6281382556085<br> Fax. (021) 8710628<br><br><br>				</div>
+    </td>
+</tr>
+@endif
 
   <script>
     function toggleMenu() {

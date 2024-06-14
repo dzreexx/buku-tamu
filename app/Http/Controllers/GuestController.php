@@ -16,7 +16,8 @@ class GuestController extends Controller
     public function index()
     {
         return view('guest', [
-            'title' => 'Selamat Datang'
+            'title' => 'Selamat Datang',
+            'page' => 'Kunjungan',
         ]);
     }
 

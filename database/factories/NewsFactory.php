@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\News;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\News;
 use Illuminate\Support\Str;
 
 /**
@@ -21,11 +21,13 @@ class NewsFactory extends Factory
         $body = fake()->text(1000);
         return [
             'judul' => fake()->sentence(),
-            'thumb_path' => fake()->imageUrl($width = 640, $height = 480),
+            // 'thumb_path' => fake()->imageUrl($width = 640, $height = 480),
+            'thumb_path' => null,
             'body' => $body,
             'excerpt' => Str::limit(strip_tags($body), 50),
             'created_at' => now(),
             'updated_at' => now(),
+            'user_id' => 1,
         ];
     }
 }

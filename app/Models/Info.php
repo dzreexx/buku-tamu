@@ -5,21 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class News extends Model
+class Info extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'judul',
-        'thumb_path',
-        'body',
-        'excerpt',
-        'created_at',
-        'user_id',
-    ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = [
+        'nama',
+        'lokasi',
+        'tanggal',
+        'ket',
+        'created_at',
+        'update_at',
+    ];
 }

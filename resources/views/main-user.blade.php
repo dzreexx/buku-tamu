@@ -1,7 +1,6 @@
 @extends('layouts.user')
 
 @section('content')
-
 {{-- ini adalah tampilan konten utama --}}
 @if(Auth::user() && $user->is_admin == '')
 <div role="alert" id="notif" class="alert alert-info mb-5">
@@ -12,10 +11,19 @@
   </div>
 </div>
 @endif
+<header class="bg-white shadow">
+  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900">Berita</h1>
+  </div>
+</header>
 @if ($news->count())    
 <div class="hidden md:flex items-center justify-center max-h-screen bg-base-200">
   <div class="flex max-h-screen w-full">
+    @if ($news[0]->thumb_path)
     <img class="w-1/2 h-auto max-h-screen object-cover" src="{{ asset('storage/'. $news[0]->thumb_path) }}" alt="Berita">
+    @else
+    <img class="w-1/2 h-auto max-h-screen object-cover" src="/images/disinfolahtal.png" alt="Berita">
+    @endif
     {{-- <img class="w-1/2 h-auto max-h-screen object-cover" src="https://source.unsplash.com/1200x400/?{{ $news[0]->judul }}" alt=""> --}}
     <div class="hero-content text-center w-1/2 flex items-center justify-center">
       <div class="max-w-md text-left">
@@ -35,7 +43,13 @@
 <div class="hidden md:flex flex-wrap mt-3 items-center justify-center">
   @foreach ($news->skip(1) as $new)    
   <div class="card m-12 w-1/4 bg-base-100 shadow-xl">
-    <figure><img src="{{ asset('storage/'. $new->thumb_path) }}" alt="Berita" /></figure>
+    <figure>
+      @if ($new->thumb_path)
+      <img src="{{ asset('storage/'. $new->thumb_path) }}" alt="Berita" />
+    @else
+    <img class="w-full h-auto max-h-screen object-cover" src="/images/disinfolahtal.png" alt="Berita">
+    @endif
+    </figure>
     <div class="card-body">
       <h2 class="card-title">
         {{ $new->judul }}
@@ -53,7 +67,7 @@
 </div>
 
 @else
-<p class="text-center">Belum ada berita.</p>
+<p class="text-center mt-5">Belum ada berita.</p>
 @endif
 {{-- ini untuk tampilan mobile --}}
 
@@ -68,7 +82,7 @@
       <p>{{ $new->excerpt }}</p>
       <div class="card-actions flex justify-between">
         <small>{{ $news[0]->created_at->diffForHumans() }}</small>
-        <a href="" class="btn btn-neutral">Baca Selengkapnya</a>
+        <a href="/berita/{{ $new->id }}" class="btn btn-neutral">Baca Selengkapnya</a>
       </div>
     </div>
   </div>

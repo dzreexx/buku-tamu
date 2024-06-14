@@ -64,21 +64,62 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/pengguna/{user}', [
         UserController::class, 'destroy'
     ])->name('users.destroy')->middleware('isAdmin');
+
+
+
     Route::get('/berita', [
         AdminController::class, 'news'
     ])->name('news')->middleware('isAdmin');
+    Route::get('/berita/search', [
+        AdminController::class, 'newsSearch'
+    ])->name('news.search')->middleware('isAdmin');
     Route::get('/berita/buat', [
         AdminController::class, 'newsCreate'
-    ])->name('news.create')->middleware('isAdmin');
+    ])->middleware('isAdmin');
+    // Route::get('/berita/buat', [
+    //     AdminController::class, 'newsCreate'
+    // ])->name('news.create')->middleware('isAdmin');
     Route::post('/berita/buat', [
         AdminController::class, 'storeNews'
         ])->name('news.store')->middleware('isAdmin');
+    Route::get('/berita/{id}', [
+        AdminController::class, 'newsDetail'
+    ])->name('news.detail')->middleware('isAdmin');
+    Route::get('/berita/{id}/edit', [
+        AdminController::class, 'newsUpdate'
+    ])->name('news.update')->middleware('isAdmin');
+    Route::post('/berita/{id}/edit', [
+        AdminController::class, 'newsUpdateStore'
+    ])->middleware('isAdmin');
+    Route::delete('/berita/{id}/hapus', [
+        AdminController::class, 'newsDestroy'
+    ])->middleware('isAdmin');
+
+
     Route::get('/informasi', [
         AdminController::class, 'info'
     ])->name('info')->middleware('isAdmin');
+    Route::get('/informasi/search', [
+        AdminController::class, 'infoSearch'
+    ])->name('info.search')->middleware('isAdmin');
+    Route::get('/informasi/{id}/ubah', [
+        AdminController::class, 'infoUpdate'
+    ])->name('info.update')->middleware('isAdmin');
+    Route::put('/informasi/{id}/ubah', [
+        AdminController::class, 'infoStoreUpdate'
+    ])->name('info.store.update')->middleware('isAdmin');
+    // Route::get('/informasi/{id}', [
+    //     AdminController::class, 'infoDetail'
+    // ])->name('info.detail')->middleware('isAdmin');
     Route::get('/informasi/buat', [
-        AdminController::class, 'newsCreate'
-    ])->name('news.create')->middleware('isAdmin');
+        AdminController::class, 'infoCreate'
+    ])->name('info.create')->middleware('isAdmin');
+    Route::post('/informasi/buat', [
+        AdminController::class, 'infoStore'
+    ])->name('info.store')->middleware('isAdmin');
+    Route::delete('/informasi/{id}/hapus', [
+        AdminController::class, 'infoDestroy'
+    ])->name('info.destroy')->middleware('isAdmin');
     });
 Route::get('/kunjungan-langsung', [GuestController::class, 'index'])->name('guest.index')->middleware('isGuest');
 Route::post('/kunjungan-langsung', [GuestController::class, 'store'])->name('guest.store');

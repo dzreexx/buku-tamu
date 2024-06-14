@@ -42,6 +42,11 @@ class User extends Authenticatable
         return $this->hasOne(Guest::class);
     }
 
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPassword($token));
