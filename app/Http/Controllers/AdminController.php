@@ -26,39 +26,16 @@ class AdminController extends Controller
     }
 
     public function main()
-{
-    $today = Carbon::today();
-
-    $guest = Guest::where('check_out_at', null)->get();
-    $today = Guest::whereDate('check_in_at', $today)->get();
-    
-    // Ambil data pengunjung berdasarkan tahun dan bulan dari tanggal check-in
-    $visitors = Guest::selectRaw('YEAR(check_in_at) as year, MONTH(check_in_at) as month, COUNT(*) as count')
-        ->groupBy('year', 'month')
-        ->orderBy('year')
-        ->orderBy('month')
-        ->get();
-
-    // Memisahkan data menjadi label dan dataset
-    $labels = $visitors->map(function ($item) {
-        // Mengonversi nomor bulan menjadi nama bulan
-        $monthName = Carbon::create()->month($item->month)->format('F');
-        return $monthName . ' ' . $item->year;
-    })->toArray();
-    
-    $data = $visitors->pluck('count')->toArray();
-
+{    
     return view('admin-main', [
         'title' => 'Halaman Admin',
         'page' => 'Kunjungan',
-        'guests' => $guest,
-        'todays' => $today,
-    ],compact('labels', 'data'));
+    ]);
 }
 
 public function tamu()
 {
-    $guest = Guest::get()->all();
+    $guest = Guest::latest()->get()->all();
     return view('admin-guest', [
         'title' => 'Halaman Tamu',
         'page' => 'Tamu',
@@ -93,6 +70,13 @@ public function guestSearch(Request $request)
     }
 
     return response($output);
+}
+
+public function getNewUsers(Request $request)
+{
+    $newUsers = User::where('is_admin', null)->get();
+
+    return response()->json($newUsers);
 }
 
 public function userSearch(Request $request)
@@ -155,12 +139,12 @@ public function userSearch(Request $request)
 public function user()
 {
     $user = User::where('is_admin', false)->get();
-    $userNew = User::where('is_admin', null)->latest()->get();
+    // $userNew = User::where('is_admin', null)->latest()->get();
     return view('admin-user', [
         'title' => 'Halaman Daftar Pengguna',
         'page' => 'Kelola Pengguna',
         'users' => $user,
-        'newUsers' => $userNew,
+        // 'newUsers' => $userNew,
     ]);
 }
 
@@ -517,4 +501,13 @@ public function show($id)
     {
         //
     }
-}
+
+// public function test()
+// {
+
+//     return view('test-livewire',[
+//         'title' => 'Halaman Testing',
+//         'page' => 'Testing',
+//     ]);
+// }
+    }

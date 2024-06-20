@@ -3,7 +3,7 @@
 @section('content')
 
       <div class="mx-auto w-1/4 flex items-center justify-center">
-        <form class="px-8 pt-6 pb-8 mb-4" action="/" method="POST" enctype="multipart/form-data">
+        <form class="px-8 pt-6 pb-8 mb-4" action="/kunjungan-langsung" method="POST" enctype="multipart/form-data">
           @csrf
             <div class="flex items-center justify-center mb-4">
                 <img class="mx-auto size-1/3" src="images/logotni.png" alt="">

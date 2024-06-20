@@ -2,74 +2,7 @@
 
 @section('content')
 <div class="content-satu mt-20 mb-20">
-  <h1 class="text-2xl font-bold text-center">Permintaan Pengguna Baru</h1>
-    @if($newUsers->isEmpty())
-    <p class="text-center">Tidak ada Permintaan Pengguna Baru.</p>
-    @else
-  <div class="overflow-x-auto" id="main-content">
-    <table class="table">
-      <!-- head -->
-      <thead>
-        <tr>
-          <th>
-            <label>
-              {{-- <input type="checkbox" class="checkbox" /> --}}
-              No.
-            </label>
-          </th>
-          <th>Nama</th>
-          <th>NIK</th>
-          <th>No Telpon</th>
-          <th></th>
-        </tr>
-      </thead>
-      @foreach ($newUsers as $nUser)
-      <tbody>
-        <tr>
-          <th>
-            <label>
-              {{-- <input type="checkbox" class="checkbox" /> --}}
-              {{ $loop->iteration }}
-            </label>
-          </th>
-          <td>
-            <div class="flex items-center gap-3">
-              <div class="avatar">
-                <div class="mask mask-squircle w-12 h-12">
-                  <img src="{{ asset('storage/'.$nUser->img_path ) }}" alt="Avatar Tailwind CSS Component" />
-                </div>
-              </div>
-              <div>
-                <div class="font-bold">{{ $nUser->nama }}</div>
-                <div class="text-sm opacity-50">{{ $nUser->email }}</div>
-              </div>
-            </div>
-          </td>
-          <td>
-            {{ $nUser->nik }}
-            <br/>
-            {{-- <span class="badge badge-ghost badge-sm">no.telp{{ $nUser->telp }}</span> --}}
-          </td>
-          <td>{{ $nUser->telp }}</td>
-          <th>
-            <button 
-              class="btn btn-ghost btn-xs" 
-              data-id="{{ $nUser->id }}" 
-              data-nama="{{ $nUser->nama }}" 
-              data-nik="{{ $nUser->nik }}" 
-              data-telp="{{ $nUser->telp }}" 
-              data-email="{{ $nUser->email }}" 
-              data-buat="{{ $nUser->created_at }}" 
-              data-img="{{ asset('storage/'.$nUser->img_path ) }}" 
-              onclick="openModal(this)">details</button>
-          </th>
-        </tr>
-      </tbody>
-      @endforeach
-      <!-- foot -->
-    </table>
-</div>
-@endif
+  <livewire:user-new>
 </div>
 <div class="content-dua ">
   <h1 class="text-2xl font-bold text-center mb-10">Daftar Pengguna</h1>

@@ -75,7 +75,7 @@ class GuestController extends Controller
             'nik' => $user->nik,
             'ket' => $request->input('ket'),
             'ticket_id' => $ticket->id,
-            'check_in_at' => Carbon::now(),
+            'check_in_at' => Carbon::now('Asia/Jakarta'),
             'selfie_path' => $user->img_path,
             'user_id' => $user->id,
         ]);
@@ -115,7 +115,7 @@ class GuestController extends Controller
             'nik' => $validatedData['nik'],
             'ket' => $validatedData['ket'],
             'ticket_id' => $ticket->id,
-            'check_in_at' => Carbon::now(),
+            'check_in_at' => Carbon::now('Asia/Jakarta'),
             'selfie_path' => $imagePath,
             'user_id' => $userId,
         ]);
@@ -143,8 +143,11 @@ class GuestController extends Controller
             $ticket->save();
         }
 
-        $guest->update(['check_out_at' => Carbon::now()]);
+        $guest->update(['check_out_at' => Carbon::now('Asia/Jakarta')]);
 
+        if ($user->is_admin) {
+            return redirect()->route('admin-main');
+        }
         return redirect()->route('guest.index')->with('status', 'Tamu telah keluar dan tiket tersedia kembali.');
     }
 }

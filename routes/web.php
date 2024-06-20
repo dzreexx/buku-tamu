@@ -37,7 +37,7 @@ Route::prefix('/user')->group(function () {
     ])->name('edit-profile')->middleware('isVerif');
     Route::post('/profile/edit', [
         UserController::class, 'updateProfile'
-    ])->name('edit-profile')->middleware('isLogin');
+    ])->name('edit-profile-store')->middleware('isLogin');
 });
 Route::prefix('/admin')->group(function () {
     Route::get('/login', [
@@ -52,9 +52,14 @@ Route::prefix('/admin')->group(function () {
     Route::get('/guests/search', [
         AdminController::class, 'guestSearch'
     ])->name('guest.search')->middleware('isAdmin');
+
     Route::get('/pengguna', [
         AdminController::class, 'user'
     ])->name('admin-user')->middleware('isAdmin');
+    Route::get('/admin/new-users', [
+        AdminController::class, 'getNewUsers'
+        ])->name('new.users');
+
     Route::get('/user/search', [
         AdminController::class, 'userSearch'
     ])->name('user.search')->middleware('isAdmin');
@@ -64,6 +69,7 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/pengguna/{user}', [
         UserController::class, 'destroy'
     ])->name('users.destroy')->middleware('isAdmin');
+    
 
 
 
@@ -95,7 +101,10 @@ Route::prefix('/admin')->group(function () {
         AdminController::class, 'newsDestroy'
     ])->middleware('isAdmin');
 
-
+    // Route::get('/test', [
+    //     AdminController::class, 'test'
+    // ])->name('test')->middleware('isAdmin');
+    
     Route::get('/informasi', [
         AdminController::class, 'info'
     ])->name('info')->middleware('isAdmin');

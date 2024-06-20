@@ -55,6 +55,7 @@
       display:none;
     }
   </style>
+  @livewireStyles
 </head>
 <body>
     <div class="drawer lg:drawer-open">
@@ -85,6 +86,7 @@
                 <li class="{{ $page === 'Kelola Pengguna' ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-700' : 'text-gray-800 dark:text-gray-100 dark:border hover:bg-gray-700 dark:hover:bg-gray-400 hover:text-white' }} rounded-md px-3 my-2 py-2 text-sm font-medium"><a href="/admin/pengguna">Pengguna</a></li>
                 <li class="{{ in_array($page, ['Kelola Berita', 'Buat Berita', 'Detail Berita', 'Rubah Berita'])  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-700' : 'text-gray-800 dark:text-gray-100 dark:border hover:bg-gray-700 dark:hover:bg-gray-400 hover:text-white' }} rounded-md px-3 my-2 py-2 text-sm font-medium"><a href="/admin/berita">Berita</a></li>
                 <li class="{{ in_array($page, ['Kelola Informasi', 'Rubah Pengumuman', 'Buat Pengumuman'])  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-700' : 'text-gray-800 dark:text-gray-100 dark:border hover:bg-gray-700 dark:hover:bg-gray-400 hover:text-white' }} rounded-md px-3 my-2 py-2 text-sm font-medium"><a href="/admin/informasi">Informasi</a></li>
+                {{-- <li class="{{ in_array($page, ['Testing', ''])  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-700' : 'text-gray-800 dark:text-gray-100 dark:border hover:bg-gray-700 dark:hover:bg-gray-400 hover:text-white' }} rounded-md px-3 my-2 py-2 text-sm font-medium"><a href="/admin/test">Test Livewire</a></li> --}}
                 <hr class="border-t border-gray-300 my-1">
                 <li class="{{ in_array($page, ['Halaman Utama', ''])  ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-700' : 'text-gray-800 dark:text-gray-100 dark:border hover:bg-gray-700 dark:hover:bg-gray-400 hover:text-white' }} rounded-md px-3 my-2 py-2 text-sm font-medium"><a href="/">Halaman Utama</a></li>
                 <form action="/logout" method="post">
@@ -96,5 +98,6 @@
             </ul>
         </div>
     </div>
+    @livewireScripts
 </body>
 </html>

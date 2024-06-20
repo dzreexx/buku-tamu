@@ -29,7 +29,8 @@ class UserFactory extends Factory
         return [
             'telp' => fake()->randomNumber(9, true),
             'nik' => fake()->nik(),
-            'img_path' => fake()->imageUrl($width = 640, $height = 480),
+            // 'img_path' => fake()->imageUrl($width = 640, $height = 480),
+            'img_path' => null,
             'is_admin' => null,
             'nama' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

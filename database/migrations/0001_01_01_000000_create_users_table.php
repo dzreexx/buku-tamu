@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('is_admin')->nullable();
             $table->bigInteger('telp');
             $table->bigInteger('nik');
-            $table->text('img_path');
+            $table->text('img_path')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
