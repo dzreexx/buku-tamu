@@ -63,7 +63,7 @@ class UserController extends Controller
         'nik.numeric' => 'NIK harus berupa angka.',
         'nik.digits' => 'NIK harus tepat 16 digit.',
         'img_profile.required' => 'Anda Harus Mengambil Foto Selfie.',
-        'img_profile.max' => 'Maksimal Ukuran Foto 2MB.',
+        // 'img_profile.max' => 'Maksimal Ukuran Foto 2MB.',
         'password.required' => 'Password harus diisi.',
         'g-recaptcha-response.required' => 'Tolong isi saya bukan Robot.',
         'captcha' => 'Captcha error! coba lagi nanti, atau tanyakan pada petugas.',
@@ -75,7 +75,8 @@ class UserController extends Controller
         'telp' => ['required','unique:users,telp', 'numeric', 'digits_between:10,13'],
         'nik' => ['required','unique:users,nik', 'numeric', 'digits:16'],
         'password' => 'required',
-        'img_profile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        // 'img_profile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'img_profile' => 'required|image|mimes:jpeg,png,jpg,gif',
         'g-recaptcha-response' => 'required|captcha',
     ],$messages);
 
@@ -133,10 +134,15 @@ public function login()
 
 public function authentication(Request $request)
 {
+    $messages = [
+        'telp.required' => 'telepon harus diisi',
+        'telp.integer' => 'telepon harus berupa nomor',
+        'password.required' => 'password harus diisi',
+    ];
     $credentials = $request->validate([
         'telp' => 'required|integer',
         'password' => 'required',
-    ]);
+    ], $messages);
 
     if (Auth::attempt($credentials))
     {
@@ -152,7 +158,7 @@ public function authentication(Request $request)
             // Jika bukan admin, arahkan ke rute lain
         }
     }
-    return back()->with('loginError', 'Login Gagal!');
+    return back()->with('loginError', 'Telepon atau password salah');
 }
 
 public function main()
@@ -214,69 +220,82 @@ public function userProfile()
 
 public function editProfile()
 {
+    $user = Auth::user();
     return view('edit-profile',[
         'title' => 'Ubah Profil',
-        'page' => 'Ubah Profil'
+        'page' => 'Ubah Profil',
+        'user' => $user,
     ]);
 }
 
 public function updateProfile(Request $request)
 {
-
+    $user = Auth::user();
     $messages = [
         'nama.required' => 'Nama harus diisi.',
         'email.required' => 'Email harus diisi.',
         'email.email' => 'Format email tidak valid.',
+        'email.unique' => 'Email telah digunakan.',
         'telp.required' => 'Nomor telepon harus diisi.',
         'telp.numeric' => 'Nomor telepon harus berupa angka.',
-        'telp.digits_between' => 'Nomor telepon maksimal 13 digit.',
+        'telp.digits_between' => 'Nomor telepon tidak valid.',
         'nik.required' => 'NIK harus diisi.',
         'nik.numeric' => 'NIK harus berupa angka.',
         'nik.digits' => 'NIK harus tepat 16 digit.',
-        'img_profile.required' => 'Anda Harus Mengambil Foto Selfie.',
-        'img_profile.max' => 'Maksimal Ukuran Foto 2MB.',
+        'img_path.required' => 'Anda Harus Mengambil Foto Selfie.',
+        'img_path.mimes' => 'File harus berformat jpeg, jpg, png, gif.',
+        'img_path.image' => 'File harus berformat gambar.',
+        // 'img_profile.max' => 'Maksimal Ukuran Foto 2MB.',
         'password.required' => 'Password harus diisi.',
     ];
 
     // Validasi input
-    $request->validate([
-        'nama' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255',
-        'telp' => 'required|string|max:255',
-        'nik' => 'required|string|max:255',
-        'password' => 'nullable|string', // Jika password tidak diisi, maka tidak validasi
-        'img_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Maksimal 2MB
-    ],$messages);
+    $rules = [
+        'nama' => 'required',
+         // Jika password tidak diisi, maka tidak validasi
+        // 'img_profile' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Maksimal 2MB
+        
+    ];
 
-    // Ambil data user yang sedang login
-    $user = Auth::user();
-
-    // Perbarui informasi profil
-    $user->nama = $request->nama;
-    $user->email = $request->email;
-    $user->telp = $request->telp;
-    $user->nik = $request->nik;
-
-    // Perbarui password jika diisi
-    if ($request->filled('password')) {
-        $user->password = bcrypt($request->password);
+    if ($request->telp != $user->telp) {
+        $rules['telp'] = ['required','unique:users,telp', 'numeric', 'digits_between:10,13'];
     }
 
-    // Perbarui foto profil jika diunggah
-    if ($request->hasFile('img_profile')) {
-        // Hapus foto lama jika ada
+    if ($request->nik != $user->nik) {
+        $rules['nik'] = ['required','unique:users,nik', 'numeric', 'digits:16'];
+    }
+
+    if ($request->email != $user->email) {
+        $rules['email'] = 'required|email|unique:users';
+    }
+
+    if ($request->filled('password')) {
+        $rules['password'] = 'required';
+    }
+
+
+    if ($request->hasFile('img_path')) {
+        $rules['img_path'] = 'required|image|mimes:jpeg,png,jpg,gif';
+        $imgPath = $request->file('img_path')->store('img_profiles', 'public');
+        
+    }
+
+    $validatedData = $request->validate($rules, $messages);
+
+    if ($request->filled('password')) {
+        $validatedData['password'] = bcrypt($request->password);
+    }
+
+    if ($request->hasFile('img_path')) {
+        $validatedData['img_path'] = $imgPath;
         if ($user->img_path) {
             Storage::disk('public')->delete($user->img_path);
         }
-        // Simpan foto baru
-        $imgPath = $request->file('img_profile')->store('img_profiles', 'public');
-        $user->img_path = $imgPath;
     }
 
-    // Simpan perubahan
-    $user->save();
+    User::where('id', $user->id)
+        ->update($validatedData);
 
-    // Redirect ke halaman profil dengan pesan sukses
     return redirect()->route('user-profile')->with('success', 'Profil berhasil diperbarui.');
 }
 
@@ -341,12 +360,13 @@ public function updateProfile(Request $request)
     
     public function checkOut($id)
     {
-        $user = User::findOrFail($id);
+        $user = Auth::user();
+        $guest = Guest::findOrFail($id);
         $ticket = $user->ticket;
 
         // Hapus file selfie jika ada
-        if ($user->selfie_path && Storage::disk('public')->exists($user->selfie_path)) {
-            Storage::disk('public')->delete($user->selfie_path);
+        if ($guest->selfie_path && Storage::disk('public')->exists($guest->selfie_path)) {
+            Storage::disk('public')->delete($guest->selfie_path);
         }
 
         if ($ticket) {
@@ -354,9 +374,9 @@ public function updateProfile(Request $request)
             $ticket->save();
         }
 
-        $user->update(['check_out_at' => Carbon::now()]);
+        $guest->update(['check_out_at' => Carbon::now()]);
 
-        return redirect()->route('user.index')->with('status', 'Tamu telah keluar dan tiket tersedia kembali.');
+        return redirect()->route('admin-main')->with('status', 'Tamu telah dikeluar dan tiket tersedia kembali.');
     }
 
     public function about()
