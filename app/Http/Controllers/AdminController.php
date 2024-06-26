@@ -238,12 +238,13 @@ public function verify(Request $request, User $user)
             'thumbnail.required' => 'Sampul Harus diisi.',
             'thumbnail.image' => 'Sampul harus berupa gambar.',
             'thumbnail.mimes' => 'Format gambar harus jpeg,png,jpg,gif.',
-            'thumbnail.max' => 'Sampul maksimal 2MB.',
+            // 'thumbnail.max' => 'Sampul maksimal 2MB.',
             'body.required' => 'Isi Harus ada.',
         ];
         $validateDoc = $request->validate([
             'judul' => 'required|max:255',
-            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif',
             'body' => 'required',
         ],$messages);
 
@@ -284,13 +285,14 @@ public function verify(Request $request, User $user)
             'thumbnail.required' => 'Sampul Harus diisi.',
             'thumbnail.image' => 'Sampul harus berupa gambar.',
             'thumbnail.mimes' => 'Format gambar harus jpeg,png,jpg,gif.',
-            'thumbnail.max' => 'Sampul maksimal 2MB.',
+            // 'thumbnail.max' => 'Sampul maksimal 2MB.',
             'body.required' => 'Isi Harus ada.',
         ];
 
         $validateDoc = $request->validate([
             'judul' => 'required|max:255',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif',
             'body' => 'required',
         ], $messages);
 

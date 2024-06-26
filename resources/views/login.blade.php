@@ -49,6 +49,9 @@
               </svg>
           </button>
         </label>
+        @error('password')
+            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+        @enderror
       </div>
       <div class="flex items-center justify-center mb-4">
         <button class="btn btn-active" type="submit">Masuk</button>

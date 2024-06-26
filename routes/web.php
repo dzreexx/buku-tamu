@@ -35,7 +35,7 @@ Route::prefix('/user')->group(function () {
     Route::get('/profile/edit', [
         UserController::class, 'editProfile'
     ])->name('edit-profile')->middleware('isVerif');
-    Route::post('/profile/edit', [
+    Route::put('/profile/edit', [
         UserController::class, 'updateProfile'
     ])->name('edit-profile-store')->middleware('isLogin');
 });
@@ -49,6 +49,9 @@ Route::prefix('/admin')->group(function () {
     Route::get('/tamu', [
         AdminController::class, 'tamu'
     ])->name('admin-tamu')->middleware('isAdmin');
+    Route::post('/tamu/keluarkan/{id}', [
+        UserController::class, 'checkOut'
+    ])->name('guest.keluarkan')->middleware('isAdmin');
     Route::get('/guests/search', [
         AdminController::class, 'guestSearch'
     ])->name('guest.search')->middleware('isAdmin');

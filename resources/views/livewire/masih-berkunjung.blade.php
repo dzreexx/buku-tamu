@@ -31,7 +31,7 @@
                 </a>
               </td>
               <td>
-                <form action="/checkout/{{ $guest->id }}" method="POST">
+                <form action="/admin/tamu/keluarkan/{{ $guest->id }}" method="POST">
                   @csrf
                 <button type="submit" class="btn btn-error">
                   Keluar

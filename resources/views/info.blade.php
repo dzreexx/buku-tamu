@@ -23,6 +23,7 @@
 
     <section id="acara" class="my-8">
         <h2 class="text-2xl font-bold mb-4">Pengumuman Acara</h2>
+        @if ($infos)
         @foreach ($infos as $info)
         <div tabindex="0" class="mt-3 collapse collapse-arrow border border-base-300 bg-info">
             <div class="collapse-title text-xl font-medium">
@@ -35,6 +36,11 @@
             </div>
           </div>
         @endforeach
+        @else
+            <div>
+                <small>Tidak ada pengumuman</small>
+            </div>
+        @endif
     </section>
 </main>
 

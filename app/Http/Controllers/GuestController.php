@@ -44,7 +44,7 @@ class GuestController extends Controller
         'nik.digits' => 'NIK salah NIK harus 16 digit.',
         'password.required' => 'Password harus diisi.',
         'selfie.required' => 'Anda Harus Mengambil Foto Selfie.',
-        'selfie.max' => 'Maksimal Ukuran Foto 2MB.',
+        // 'selfie.max' => 'Maksimal Ukuran Foto 2MB.',
         'ket.required' => 'Keterangan Harus Di isi.',
         'required' => 'Tolong isi saya bukan Robot.',
         'captcha' => 'Captcha error! coba lagi nanti, atau tanyakan pada petugas.',
@@ -86,7 +86,8 @@ class GuestController extends Controller
             'telp' => ['required', 'numeric', 'digits_between:1,13'],
             'nik' => ['required', 'numeric', 'digits:16'],
             'ket' => 'required',
-            'selfie' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'selfie' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'selfie' => 'required|image|mimes:jpeg,png,jpg,gif',
             'g-recaptcha-response' => 'required|captcha',
         ], $messages);
 
@@ -145,9 +146,6 @@ class GuestController extends Controller
 
         $guest->update(['check_out_at' => Carbon::now('Asia/Jakarta')]);
 
-        if ($user->is_admin) {
-            return redirect()->route('admin-main');
-        }
         return redirect()->route('guest.index')->with('status', 'Tamu telah keluar dan tiket tersedia kembali.');
     }
 }
