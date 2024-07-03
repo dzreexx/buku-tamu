@@ -46,7 +46,7 @@
           <div class="flex items-center gap-3">
             <div class="avatar">
               <div class="mask mask-squircle w-12 h-12">
-                <img src="{{ asset('storage/'.$user->img_path ) }}" alt="Avatar Tailwind CSS Component" />
+                <img src="{{ route("display.profile",$user->img_path ) }}" alt="Avatar Tailwind CSS Component" />
               </div>
             </div>
             <div>
@@ -71,7 +71,7 @@
             data-telp="0{{ $user->telp }}" 
             data-email="{{ $user->email }}" 
             data-buat="{{ $user->created_at }}" 
-            data-img="{{ asset('storage/'.$user->img_path ) }}" 
+            data-img="{{ route("display.profile",$user->img_path ) }}" 
             onclick="openModal(this)">details</button>
         </th>
       </tr>

@@ -38,7 +38,7 @@
             @enderror
           </div> 
           <div class="mb-3">
-            <textarea placeholder="Keperluan" id="ket" name="ket" class="textarea textarea-bordered textarea-md w-full max-w-xl @error('ket') input-error @enderror" required ></textarea>
+            <textarea placeholder="Keperluan" id="ket" name="ket" class="textarea textarea-bordered textarea-md w-full max-w-xl @error('ket') input-error @enderror" required >{{ old('ket') }}</textarea>
             @error('ket')
             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror

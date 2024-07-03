@@ -23,7 +23,7 @@
     </div>
     <div class="flex justify-center items-center h-screen">
         <div class="card w-96 bg-base-100 shadow-xl">
-            <figure><img src="{{ asset('storage/' . $guest->selfie_path) }}" alt="Selfie" /></figure>
+            <figure><img src="{{ route("display.guest", $guest->selfie_path) }}" alt="Selfie" /></figure>
             <div class="card-body">
                 <ul class="list-none p-0">
                     <li class="flex justify-between border-b border-gray-300 py-2">

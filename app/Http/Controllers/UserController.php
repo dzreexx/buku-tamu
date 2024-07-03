@@ -57,7 +57,7 @@ class UserController extends Controller
         'telp.required' => 'Nomor telepon harus diisi.',
         'telp.unique' => 'Nomor Telepon sudah digunakan.',
         'telp.numeric' => 'Nomor telepon harus berupa angka.',
-        'telp.digits_between' => 'Nomor telepon maksimal 13 digit.',
+        'telp.digits_between' => 'telepon harus diantara 10-13 digits.',
         'nik.required' => 'NIK harus diisi.',
         'nik.unique' => 'NIK sudah digunakan.',
         'nik.numeric' => 'NIK harus berupa angka.',
@@ -83,45 +83,24 @@ class UserController extends Controller
     if ($request->hasFile('img_profile')) {
         $image = $request->file('img_profile');
         $imageName = time() . '_' . $image->getClientOriginalName();
-        $imagePath = $image->storeAs('img_profiles', $imageName, 'public'); // Menyimpan gambar ke dalam folder 'selfies' di dalam direktori 'storage/app/public'
+        // $imagePath = $image->storeAs('img_profiles', $imageName, 'public'); // Menyimpan gambar ke dalam folder 'selfies' di dalam direktori 'storage/app/public'
+        $img = $image->storeAs('img_profiles', $imageName, 'public');
+        $imagePath = explode('/', $img);
+
     }
-    // // Proses upload selfie
-    // if ($request->hasFile('selfie')) {
-    //     $image = $request->file('selfie');
-    //     $imageName = time() . '_' . $image->getClientOriginalName();
-    //     $imagePath = $image->storeAs('selfies', $imageName, 'public'); // Menyimpan gambar ke dalam folder 'selfies' di dalam direktori 'storage/app/public'
-    // }
-
-    // // Dapatkan tiket yang tersedia atau buat yang baru jika tidak ada
-    // $ticket = Ticket::where('is_used', false)->first();
-
-    // if (!$ticket) {
-    //     $lastTicket = Ticket::latest()->first();
-    //     $ticketNumber = $lastTicket ? intval($lastTicket->number) + 1 : 1;
-    //     $ticketNumber = str_pad($ticketNumber, 4, '0', STR_PAD_LEFT);
-
-    //     $ticket = Ticket::create([
-    //         'number' => $ticketNumber,
-    //     ]);
-    // }
-
-    // $ticket->is_used = true;
-    // $ticket->save();
-
+ 
     $user = User::create([
         'nama' => $validatedData['nama'],
         'email' => $validatedData['email'],
         'telp' => $validatedData['telp'],
         'nik' => $validatedData['nik'],
         'password' => $validatedData['password'],
-        'img_path' => $imagePath ?? null,
-        // 'ket' => $validatedData['ket'],
-        // 'ticket_id' => $ticket->id,
-        // 'check_in_at' => Carbon::now(),
-        // 'selfie_path' => $imagePath ?? null, // Simpan path gambar selfie
+        // 'img_path' => $imagePath ?? null,
+        'img_path' => $imagePath[1],
+
     ]);
 
-    return redirect()->route('login');
+    return redirect()->route('login')->with('success', 'Akun berhasil di buat!');
 }
 
 
@@ -136,11 +115,12 @@ public function authentication(Request $request)
 {
     $messages = [
         'telp.required' => 'telepon harus diisi',
-        'telp.integer' => 'telepon harus berupa nomor',
+        'telp.numeric' => 'telepon harus berupa nomor',
+        'telp.digits_between' => 'telepon harus diantara 10-13 digits',
         'password.required' => 'password harus diisi',
     ];
     $credentials = $request->validate([
-        'telp' => 'required|integer',
+        'telp' => 'required|numeric|digits_between:10,13',
         'password' => 'required',
     ], $messages);
 
@@ -276,8 +256,8 @@ public function updateProfile(Request $request)
 
     if ($request->hasFile('img_path')) {
         $rules['img_path'] = 'required|image|mimes:jpeg,png,jpg,gif';
-        $imgPath = $request->file('img_path')->store('img_profiles', 'public');
-        
+        $img = $request->file('img_path')->store('img_profiles', 'public');
+        $imgPath = explode('/', $img);
     }
 
     $validatedData = $request->validate($rules, $messages);
@@ -287,7 +267,7 @@ public function updateProfile(Request $request)
     }
 
     if ($request->hasFile('img_path')) {
-        $validatedData['img_path'] = $imgPath;
+        $validatedData['img_path'] = $imgPath[1];
         if ($user->img_path) {
             Storage::disk('public')->delete($user->img_path);
         }
@@ -436,7 +416,7 @@ public function updateProfile(Request $request)
     {
         // Hapus gambar profil dari storage jika ada
         if ($user->img_path) {
-            Storage::delete($user->img_path);
+            Storage::disk('public')->delete($user->img_path);
         }
 
         // Hapus user dari database

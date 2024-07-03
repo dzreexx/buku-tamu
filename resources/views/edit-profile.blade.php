@@ -7,8 +7,8 @@
         @csrf
         @method('put')
         <div class="rounded-full overflow-hidden w-64 h-64">
-            <a href="{{ asset("storage/". auth()->user()->img_path) }}" data-baguettebox="gallery">
-                <img id="preview-image" class="w-full h-full object-cover" src="{{ asset("storage/". auth()->user()->img_path) }}" alt="">
+            <a href="{{ route("display.profile", auth()->user()->img_path) }}" data-baguettebox="gallery">
+                <img id="preview-image" class="w-full h-full object-cover" src="{{ route("display.profile", auth()->user()->img_path) }}" alt="">
             </a>
         </div>
         <label class="form-control w-full max-w-xs">

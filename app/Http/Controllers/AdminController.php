@@ -200,7 +200,7 @@ public function verify(Request $request, User $user)
         $news = News::findOrFail($id);
         // Hapus gambar profil dari storage jika ada
         if ($news->thumb_path) {
-            Storage::delete($news->thumb_path);
+            Storage::disk('public')->delete($news->thumb_path);
         }
 
         // Hapus user dari database
@@ -259,8 +259,11 @@ public function verify(Request $request, User $user)
                 Storage::disk('public')->delete($news->thumb_path);
             }
             // Simpan foto baru
-            $imgPath = $request->file('thumbnail')->store('thumbnail', 'public');
-            $news->thumb_path = $imgPath;
+            $image = $request->file('thumbnail');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $img = $image->storeAs('thumbnails', $imageName, 'public');
+            $imagePath = explode('/', $img);
+            $news->thumb_path = $imagePath[1];
         }
 
         $news->save();
@@ -299,14 +302,15 @@ public function verify(Request $request, User $user)
         if ($request->hasFile('thumbnail')) {
             $image = $request->file('thumbnail');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('thumbnails', $imageName, 'public');
+            $img = $image->storeAs('thumbnails', $imageName, 'public');
+            $imagePath = explode('/', $img);
         }
 
         $user = Auth::user();
 
         $news = News::create([
             'judul' => $validateDoc['judul'],
-            'thumb_path' => $imagePath,
+            'thumb_path' => $imagePath[1],
             'body' => $validateDoc['body'],
             'excerpt' => Str::limit(strip_tags($request->body), 50),
             'user_id' => $user->id,
@@ -450,7 +454,7 @@ public function infoStore(Request $request)
 
     Info::create($validateDoc);
 
-    return redirect()->route('info', ['Success' => 'Informasi berhasi ditambahkan.']);
+    return redirect()->route('info')->with('success', 'Informasi berhasi ditambahkan.');
 }
 
 public function show($id)

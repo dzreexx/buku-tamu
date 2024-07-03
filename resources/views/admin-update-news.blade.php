@@ -32,7 +32,7 @@
     <!-- Preview gambar -->
     @if ($news->thumb_path)
     <div class="mt-4">
-        <img id="thumbnail-preview" src="{{ asset('storage/'.$news->thumb_path) }}" alt="Preview Thumbnail" style="max-width: 300px;">
+        <img id="thumbnail-preview" src="{{ route('display.news',$news->thumb_path) }}" alt="Preview Thumbnail" style="max-width: 300px;">
     </div>
     @else
         <div class="mt-4">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
@@ -9,7 +10,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GuestController;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\DeviceController;
-use App\Models\User;
+use App\Http\Controllers\GetImageController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -23,7 +24,7 @@ Route::post('/logout', [UserController::class, 'logout'])->name('user.logout');
 Route::get('/', [UserController::class, 'main'])->name('beranda');
 Route::get('/tentang', [UserController::class, 'about'])->name('tentang');
 Route::get('/informasi', [UserController::class, 'info'])->name('informasi');
-Route::get('/kunjungan', [UserController::class, 'kunjungan'])->name('kunjungan')->middleware('isVerif');
+Route::get('/kunjungan', [UserController::class, 'kunjungan'])->name('kunjungan')->middleware('isLogin');
 Route::get('/berita/{id}', [UserController::class, 'berita'])->name('berita');
 Route::prefix('/user')->group(function () {
     Route::get('/kunjungan', [
@@ -31,7 +32,7 @@ Route::prefix('/user')->group(function () {
     ])->name('user-guest')->middleware('isVerif');
     Route::get('/profile', [
         UserController::class, 'userProfile'
-    ])->name('user-profile')->middleware('isVerif');
+    ])->name('user-profile')->middleware('isLogin');
     Route::get('/profile/edit', [
         UserController::class, 'editProfile'
     ])->name('edit-profile')->middleware('isVerif');
@@ -188,3 +189,8 @@ Route::post('/reset-password', function (Request $request) {
                 ? redirect()->route('login')->with('status', __($status))
                 : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
+
+
+Route::get('/storage/img_profiles/{filename}', [GetImageController::class, 'displayProfile'])->name('display.profile');
+Route::get('/storage/selfies/{filename}', [GetImageController::class, 'displayGuest'])->name('display.guest');
+Route::get('/storage/thumbnails/{filename}', [GetImageController::class, 'displayNews'])->name('display.news');

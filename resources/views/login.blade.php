@@ -13,6 +13,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
+  @if (session('success'))
+  <div role="alert" class="alert alert-success w-full mx-auto">
+    <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    fill="none" 
+    viewBox="0 0 24 24" 
+    stroke-width="1.5" 
+    stroke="currentColor" 
+    class="size-6">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+    </svg>    
+    <span>{{ session('success') }}</span>
+    {{-- <span>Test sukses</span> --}}
+  </div>
+  @endif
     @if(session()->has('loginError'))
     <div role="alert" class="alert alert-error w-full mx-auto">
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>

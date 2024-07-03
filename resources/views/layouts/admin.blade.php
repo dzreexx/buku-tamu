@@ -39,6 +39,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ $title }}</title>
     @vite('resources/css/app.css')
+    <link rel="icon" href="{{ asset('images/logotni.png') }}" type="image/x-png"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.49.1/apexcharts.min.js" 
     integrity="sha512-qiVW4rNFHFQm0jHli5vkdEwP4GPSzCSp85J7JRHdgzuuaTg31tTMC8+AHdEC5cmyMFDByX639todnt6cxEc1lQ==" 
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>

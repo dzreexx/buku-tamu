@@ -26,8 +26,8 @@
               <td>0{{ $guest->nik }}</td>
               <td>0{{ $guest->telp }}</td>
               <td>
-                <a href="{{ asset('storage/'.$guest->selfie_path) }}" data-baguettebox="gallery">
-                  <img class="h-20" src="{{ asset('storage/'.$guest->selfie_path) }}" alt="">
+                <a href="{{ route("display.guest",$guest->selfie_path) }}" data-baguettebox="gallery">
+                  <img class="h-20" src="{{ route("display.guest",$guest->selfie_path) }}" alt="">
                 </a>
               </td>
               <td>

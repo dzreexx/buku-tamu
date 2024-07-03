@@ -38,7 +38,7 @@ class GuestController extends Controller
         'email.email' => 'Format email tidak valid.',
         'telp.required' => 'Nomor telepon harus diisi.',
         'telp.numeric' => 'Nomor telepon harus berupa angka.',
-        'telp.digits_between' => 'Nomor telepon maksimal 13 digit.',
+        'telp.digits_between' => 'Nomor telepon harus diantara 10-13 digits',
         'nik.required' => 'NIK harus diisi.',
         'nik.numeric' => 'NIK harus berupa angka.',
         'nik.digits' => 'NIK salah NIK harus 16 digit.',
@@ -83,7 +83,7 @@ class GuestController extends Controller
 
         $validatedData = $request->validate([
             'nama' => 'required',
-            'telp' => ['required', 'numeric', 'digits_between:1,13'],
+            'telp' => ['required', 'numeric', 'digits_between:10,13'],
             'nik' => ['required', 'numeric', 'digits:16'],
             'ket' => 'required',
             // 'selfie' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -94,7 +94,8 @@ class GuestController extends Controller
         if ($request->hasFile('selfie')) {
             $image = $request->file('selfie');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('selfies', $imageName, 'public');
+            $img = $image->storeAs('selfies', $imageName, 'public');
+            $imagePath = explode('/', $img);
         }
 
         $user = Auth::user();
@@ -117,7 +118,7 @@ class GuestController extends Controller
             'ket' => $validatedData['ket'],
             'ticket_id' => $ticket->id,
             'check_in_at' => Carbon::now('Asia/Jakarta'),
-            'selfie_path' => $imagePath,
+            'selfie_path' => $imagePath[1],
             'user_id' => $userId,
         ]);
     }

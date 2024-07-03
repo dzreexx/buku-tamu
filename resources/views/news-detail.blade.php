@@ -8,7 +8,7 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ $news->judul }}</h2>
         <small class="text-gray-600 mb-6">Ditulis oleh <span class="font-bold">{{ $news->user->nama }}</span> pada <span class="font-bold">{{ \Carbon\Carbon::parse($news->created_at)->locale('id')->translatedFormat('l, d F Y') }}</span></small>
         @if ($news->thumb_path)
-        <img src="{{ asset('storage/'.$news->thumb_path) }}" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
+        <img src="{{ route('display.news',$news->thumb_path) }}" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
         @else
         <img src="/images/disinfolahtal.png" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
         @endif

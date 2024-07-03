@@ -8,7 +8,7 @@
         <h2 class="text-3xl font-bold text-gray-800 mb-4">{{ $berita->judul }}</h2>
         <small class="text-gray-600 mb-6">Ditulis oleh <span class="font-bold">{{ $berita->user->nama }}</span> pada <span class="font-bold">{{ $berita->formatted_date }}</span></small>
         @if ($berita->thumb_path)
-        <img src="{{ asset('storage/'.$berita->thumb_path) }}" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
+        <img src="{{ route('display.news',$berita->thumb_path) }}" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
         @else
         <img src="/images/disinfolahtal.png" alt="Gambar Berita" class="w-full h-64 object-cover object-center mb-6 rounded-lg">
         @endif

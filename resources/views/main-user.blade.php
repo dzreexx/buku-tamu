@@ -20,7 +20,7 @@
 <div class="hidden md:flex items-center justify-center max-h-screen bg-base-200">
   <div class="flex max-h-screen w-full">
     @if ($news[0]->thumb_path)
-    <img class="w-1/2 h-auto max-h-screen object-cover" src="{{ asset('storage/'. $news[0]->thumb_path) }}" alt="Berita">
+    <img class="w-1/2 h-auto max-h-screen object-cover" src="{{ route('display.news', $news[0]->thumb_path) }}" alt="Berita">
     @else
     <img class="w-1/2 h-auto max-h-screen object-cover" src="/images/disinfolahtal.png" alt="Berita">
     @endif
@@ -45,7 +45,7 @@
   <div class="card m-12 w-1/4 bg-base-100 shadow-xl">
     <figure>
       @if ($new->thumb_path)
-      <img src="{{ asset('storage/'. $new->thumb_path) }}" alt="Berita" />
+      <img src="{{ route('display.news', $new->thumb_path) }}" alt="Berita" />
     @else
     <img class="w-full h-auto max-h-screen object-cover" src="/images/disinfolahtal.png" alt="Berita">
     @endif
@@ -74,7 +74,7 @@
 <div class="block md:hidden">
   @foreach ($news as $new) 
   <div class="card w-2/1 bg-base-100 shadow-xl m-2 ">
-    <figure><img src="{{ asset('storage/'. $new->thumb_path) }}" alt="Shoes" /></figure>
+    <figure><img src="{{ route('display.news', $new->thumb_path) }}" alt="Shoes" /></figure>
     <div class="card-body">
       <h2 class="card-title">
         {{ $new->judul }}
