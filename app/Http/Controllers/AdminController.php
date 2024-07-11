@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\User;
-use App\Models\News;
-use App\Models\Info;
-use App\Models\Guest;
 use Carbon\Carbon;
+use App\Models\Info;
+use App\Models\News;
+use App\Models\User;
+use App\Models\Guest;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -43,6 +44,18 @@ public function tamu()
     ]);
 }
 
+public function detailTamu($id)
+{
+    $guestId = Crypt::decrypt($id);
+    $guest = Guest::findOrFail($guestId);
+    return view('postreq-admin', [
+        'title' => 'Detail Tamu',
+        'page' => 'Detail Tamu',
+        'guest' => $guest,
+        'id' => $guestId,
+    ]);
+}
+
 public function guestSearch(Request $request)
 {
     $output = "";
@@ -66,6 +79,7 @@ public function guestSearch(Request $request)
             <td>' . ($guest->created_at instanceof \Carbon\Carbon ? $guest->created_at->format('Y-m-d') : $guest->created_at) . '</td>
             <td>' . ($guest->check_in_at instanceof \Carbon\Carbon ? $guest->check_in_at->format('H:i') : \Illuminate\Support\Str::after($guest->check_in_at, ' ')) . '</td>
             <td>' . ($guest->check_out_at instanceof \Carbon\Carbon ? $guest->check_out_at->format('H:i') : \Illuminate\Support\Str::after($guest->check_out_at, ' ')) . '</td>
+            <td><a href="'.route('detail-tamu', ['id' => Crypt::encrypt($guest->id)]).'">Lihat</a></td>
         </tr>';
     }
 
@@ -312,7 +326,7 @@ public function verify(Request $request, User $user)
             'judul' => $validateDoc['judul'],
             'thumb_path' => $imagePath[1],
             'body' => $validateDoc['body'],
-            'excerpt' => Str::limit(strip_tags($request->body), 50),
+            'excerpt' => Str::limit(strip_tags($request->body), 200),
             'user_id' => $user->id,
         ]);
 

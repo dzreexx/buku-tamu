@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Guest;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Ticket;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class GuestController extends Controller
 {
@@ -23,10 +25,13 @@ class GuestController extends Controller
 
     public function ticket($id)
     {
-        $guest = Guest::findOrFail($id);
+        $guestId = Crypt::decrypt($id);
+        $guest = Guest::findOrFail($guestId);
+        $sessionIni = Session::get('guest_id');
         return view('postreq', [
             'title' => 'Ticket Tamu',
-            'guest' => $guest
+            'guest' => $guest,
+            'id' => $id,
         ]);
     }
 
@@ -75,10 +80,15 @@ class GuestController extends Controller
             'nik' => $user->nik,
             'ket' => $request->input('ket'),
             'ticket_id' => $ticket->id,
-            'check_in_at' => Carbon::now('Asia/Jakarta'),
+            'check_in_at' => Carbon::now(),
             'selfie_path' => $user->img_path,
             'user_id' => $user->id,
         ]);
+        $encryptedId = Crypt::encrypt($guest->id);
+        $request->session()->regenerate();
+        $request->session()->put('guest_id', $encryptedId);
+        $user->guest_id = $guest->id;
+        $user->save();
     } else {
 
         $validatedData = $request->validate([
@@ -121,32 +131,46 @@ class GuestController extends Controller
             'selfie_path' => $imagePath[1],
             'user_id' => $userId,
         ]);
-    }
 
-    return redirect()->route('guest.ticket', ['id' => $guest->id]);
+        $encryptedId = Crypt::encrypt($guest->id);
+        $request->session()->regenerate();
+        $request->session()->put('guest_id', $encryptedId);
+    }
+    
+    $encryptedId = Crypt::encrypt($guest->id);
+    return redirect()->route('guest.ticket', ['id' => $encryptedId]);
 }
 
-    public function checkOut($id)
+    public function checkOut(Request $request, $id)
     {
         $user = Auth::user();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         $guest = Guest::findOrFail($id);
         $ticket = $guest->ticket;
 
-        if (!$user) {
-            // Hapus file selfie jika ada
-            if ($guest->selfie_path && Storage::disk('public')->exists($guest->selfie_path)) {
-                Storage::disk('public')->delete($guest->selfie_path);
-            }
-        }
+        //fungsi untuk menghapus file gambar di storage
+        // if (!$user) {
+        //     // Hapus file selfie jika ada
+        //     if ($guest->selfie_path && Storage::disk('public')->exists($guest->selfie_path)) {
+        //         Storage::disk('public')->delete($guest->selfie_path);
+        //     }
+        // }
 
         if ($ticket) {
             $ticket->is_used = false;
             $ticket->save();
         }
 
+        if ($user) {
+            $user->guest_id = null;
+            $user->save();
+        }
         $guest->update(['check_out_at' => Carbon::now('Asia/Jakarta')]);
 
-        return redirect()->route('guest.index')->with('status', 'Tamu telah keluar dan tiket tersedia kembali.');
+        return redirect()->route('beranda')->with('status', 'Tamu telah keluar dan tiket tersedia kembali.');
     }
 }

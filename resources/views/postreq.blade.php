@@ -23,7 +23,11 @@
     </div>
     <div class="flex justify-center items-center h-screen">
         <div class="card w-96 bg-base-100 shadow-xl">
+            @if (Auth::user())
+            <figure><img src="{{ route("display.profile", $guest->selfie_path) }}" alt="Selfie" /></figure>
+            @else
             <figure><img src="{{ route("display.guest", $guest->selfie_path) }}" alt="Selfie" /></figure>
+            @endif
             <div class="card-body">
                 <ul class="list-none p-0">
                     <li class="flex justify-between border-b border-gray-300 py-2">

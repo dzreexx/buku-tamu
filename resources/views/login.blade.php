@@ -38,7 +38,9 @@
         <form class="px-8 pt-6 pb-8 mb-4" action="/login" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="flex items-center justify-center mb-4">
-            <img class="mx-auto size-1/3" src="images/logotni.png" alt="">
+              <a href="/">
+                <img class="mx-auto size-1/3" src="images/logotni.png" alt="">
+              </a>
           </div>
           <div class="flex items-center justify-center mb-4">
             <h1 class="font-bold text-xl font-inter">LOGIN</h1>

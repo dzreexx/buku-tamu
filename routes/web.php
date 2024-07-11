@@ -15,21 +15,24 @@ use App\Http\Controllers\GetImageController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
-Route::get('/daftar', [UserController::class, 'index'])->name('user.index')->middleware('isGuest');
-Route::post('/daftar', [UserController::class, 'store'])->name('user.store');
-Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('isGuest');
-Route::post('/login', [UserController::class, 'authentication'])->name('user.auth');
-Route::post('/logout', [UserController::class, 'logout'])->name('user.logout');
-Route::get('/', [UserController::class, 'main'])->name('beranda');
-Route::get('/tentang', [UserController::class, 'about'])->name('tentang');
-Route::get('/informasi', [UserController::class, 'info'])->name('informasi');
-Route::get('/kunjungan', [UserController::class, 'kunjungan'])->name('kunjungan')->middleware('isLogin');
-Route::get('/berita/{id}', [UserController::class, 'berita'])->name('berita');
-Route::prefix('/user')->group(function () {
-    Route::get('/kunjungan', [
+Route::middleware('isInside')->group(function () {
+    Route::get('/', [UserController::class, 'main'])->name('beranda');
+    Route::get('/daftar', [UserController::class, 'index'])->name('user.index')->middleware('isGuest');
+    Route::post('/daftar', [UserController::class, 'store'])->name('user.store');
+    Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('isGuest');
+    Route::post('/login', [UserController::class, 'authentication'])->name('user.auth');
+    Route::post('/logout', [UserController::class, 'logout'])->name('user.logout');
+    Route::get('/tentang', [UserController::class, 'about'])->name('tentang');
+    Route::get('/informasi', [UserController::class, 'info'])->name('informasi');
+    Route::get('/kunjungan', [UserController::class, 'kunjungan'])->name('kunjungan')->middleware('isLogin');
+    Route::get('/berita/{id}', [UserController::class, 'berita'])->name('berita');
+    Route::get('/user/kunjungan', [
         UserController::class, 'userGuest'
     ])->name('user-guest')->middleware('isVerif');
+});
+
+
+Route::prefix('/user')->group(function () {
     Route::get('/profile', [
         UserController::class, 'userProfile'
     ])->name('user-profile')->middleware('isLogin');
@@ -50,6 +53,9 @@ Route::prefix('/admin')->group(function () {
     Route::get('/tamu', [
         AdminController::class, 'tamu'
     ])->name('admin-tamu')->middleware('isAdmin');
+    Route::get('/tamu/{id}', [
+        AdminController::class, 'detailTamu'
+    ])->name('detail-tamu')->middleware('isAdmin');
     Route::post('/tamu/keluarkan/{id}', [
         UserController::class, 'checkOut'
     ])->name('guest.keluarkan')->middleware('isAdmin');

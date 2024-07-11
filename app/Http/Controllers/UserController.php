@@ -143,7 +143,7 @@ public function authentication(Request $request)
 
 public function main()
 {
-    $news = News::latest()->paginate(10);
+    $news = News::latest()->paginate(9);
 
     return view('main-user',[
         'title' => 'Halaman Utama',
