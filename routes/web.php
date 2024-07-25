@@ -17,10 +17,12 @@ use App\Http\Controllers\GetImageController;
 // });
 Route::middleware('isInside')->group(function () {
     Route::get('/', [UserController::class, 'main'])->name('beranda');
-    Route::get('/daftar', [UserController::class, 'index'])->name('user.index')->middleware('isGuest');
-    Route::post('/daftar', [UserController::class, 'store'])->name('user.store');
-    Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('isGuest');
-    Route::post('/login', [UserController::class, 'authentication'])->name('user.auth');
+    Route::middleware(['throttle:60,1'])->group(function () {     
+        Route::get('/daftar', [UserController::class, 'index'])->name('user.index')->middleware('isGuest');
+        Route::post('/daftar', [UserController::class, 'store'])->name('user.store');
+        Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('isGuest');
+        Route::post('/login', [UserController::class, 'authentication'])->name('user.auth');
+    });
     Route::post('/logout', [UserController::class, 'logout'])->name('user.logout');
     Route::get('/tentang', [UserController::class, 'about'])->name('tentang');
     Route::get('/informasi', [UserController::class, 'info'])->name('informasi');
