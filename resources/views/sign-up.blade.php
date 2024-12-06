@@ -17,7 +17,9 @@
         <form class="px-8 pt-6 pb-8 mb-4" action="/daftar" method="POST" id="uploadForm" enctype="multipart/form-data">
           @csrf
             <div class="flex items-center justify-center mb-4">
+              <a href="/">
                 <img class="mx-auto size-1/3" src="images/logotni.png" alt="">
+              </a>
               </div>
               <div class="flex items-center justify-center mb-4">
                 <h1 class="font-bold text-xl font-inter">Daftar Akun</h1>

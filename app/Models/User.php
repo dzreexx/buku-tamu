@@ -36,6 +36,7 @@ class User extends Authenticatable
         'password',
         'img_path',
         'is_admin',
+        'guest_id',
     ];
     public function guest()
     {

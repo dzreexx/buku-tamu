@@ -12,10 +12,14 @@ class ChartTahun extends Component
     {
         $guest = Guest::where('check_out_at', null)->get();
         
-        $visitors = Guest::selectRaw('YEAR(check_in_at) as year, MONTH(check_in_at) as month, COUNT(*) as count')
-        ->groupBy('year', 'month')
+        // $visitors = Guest::selectRaw('YEAR(check_in_at) as year, MONTH(check_in_at) as month, COUNT(*) as count')
+        // ->groupBy('year', 'month')
+        // ->orderBy('year')
+        // ->orderBy('month')
+        // ->get();
+        $visitors = Guest::selectRaw('YEAR(check_in_at) as year, COUNT(*) as count')
+        ->groupBy('year')
         ->orderBy('year')
-        ->orderBy('month')
         ->get();
 
         $visitorsLogin = Guest::whereNotNull('user_id')
@@ -26,10 +30,9 @@ class ChartTahun extends Component
         ->get();
 
     $visitorsNotLogin = Guest::whereNull('user_id')
-        ->selectRaw('YEAR(check_in_at) as year, MONTH(check_in_at) as month, COUNT(*) as count')
-        ->groupBy('year', 'month')
+        ->selectRaw('YEAR(check_in_at) as year, COUNT(*) as count')
+        ->groupBy('year')
         ->orderBy('year')
-        ->orderBy('month')
         ->get();
 
         $labels = $visitors->map(function ($item) {

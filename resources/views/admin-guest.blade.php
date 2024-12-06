@@ -43,6 +43,7 @@
                   {{ \Illuminate\Support\Str::after($guest->check_out_at, ' ') }}
               @endif
           </td>
+          <td><a href="/admin/tamu/{{ Crypt::encrypt($guest->id); }}">Lihat</a></td>
         </tr>
         @endforeach
       </tbody> 

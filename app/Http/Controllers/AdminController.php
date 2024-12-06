@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use App\Models\User;
-use App\Models\News;
-use App\Models\Info;
-use App\Models\Guest;
 use Carbon\Carbon;
+use App\Models\Info;
+use App\Models\News;
+use App\Models\User;
+use App\Models\Guest;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -43,6 +44,18 @@ public function tamu()
     ]);
 }
 
+public function detailTamu($id)
+{
+    $guestId = Crypt::decrypt($id);
+    $guest = Guest::findOrFail($guestId);
+    return view('postreq-admin', [
+        'title' => 'Detail Tamu',
+        'page' => 'Detail Tamu',
+        'guest' => $guest,
+        'id' => $guestId,
+    ]);
+}
+
 public function guestSearch(Request $request)
 {
     $output = "";
@@ -66,6 +79,7 @@ public function guestSearch(Request $request)
             <td>' . ($guest->created_at instanceof \Carbon\Carbon ? $guest->created_at->format('Y-m-d') : $guest->created_at) . '</td>
             <td>' . ($guest->check_in_at instanceof \Carbon\Carbon ? $guest->check_in_at->format('H:i') : \Illuminate\Support\Str::after($guest->check_in_at, ' ')) . '</td>
             <td>' . ($guest->check_out_at instanceof \Carbon\Carbon ? $guest->check_out_at->format('H:i') : \Illuminate\Support\Str::after($guest->check_out_at, ' ')) . '</td>
+            <td><a href="'.route('detail-tamu', ['id' => Crypt::encrypt($guest->id)]).'">Lihat</a></td>
         </tr>';
     }
 
@@ -104,7 +118,7 @@ public function userSearch(Request $request)
           <div class="flex items-center gap-3">
             <div class="avatar">
               <div class="mask mask-squircle w-12 h-12">
-                <img src="'.asset("storage/".$user->img_path ) .'" alt="Avatar Tailwind CSS Component" />
+                <img src="'.route("display.profile",$user->img_path ) .'" alt="Avatar Tailwind CSS Component" />
               </div>
             </div>
             <div>
@@ -127,7 +141,7 @@ public function userSearch(Request $request)
             data-telp="0'.$user->telp.'" 
             data-email="'.$user->email.'" 
             data-buat="'.$user->created_at.'" 
-            data-img="'.asset("storage/".$user->img_path ).'" 
+            data-img="'.route("display.profile",$user->img_path ).'" 
             onclick="openModal(this)">details</button>
         </th>
       </tr>';
@@ -200,7 +214,7 @@ public function verify(Request $request, User $user)
         $news = News::findOrFail($id);
         // Hapus gambar profil dari storage jika ada
         if ($news->thumb_path) {
-            Storage::delete($news->thumb_path);
+            Storage::disk('public')->delete($news->thumb_path);
         }
 
         // Hapus user dari database
@@ -238,12 +252,13 @@ public function verify(Request $request, User $user)
             'thumbnail.required' => 'Sampul Harus diisi.',
             'thumbnail.image' => 'Sampul harus berupa gambar.',
             'thumbnail.mimes' => 'Format gambar harus jpeg,png,jpg,gif.',
-            'thumbnail.max' => 'Sampul maksimal 2MB.',
+            // 'thumbnail.max' => 'Sampul maksimal 2MB.',
             'body.required' => 'Isi Harus ada.',
         ];
         $validateDoc = $request->validate([
             'judul' => 'required|max:255',
-            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'image|mimes:jpeg,png,jpg,gif',
             'body' => 'required',
         ],$messages);
 
@@ -258,8 +273,11 @@ public function verify(Request $request, User $user)
                 Storage::disk('public')->delete($news->thumb_path);
             }
             // Simpan foto baru
-            $imgPath = $request->file('thumbnail')->store('thumbnail', 'public');
-            $news->thumb_path = $imgPath;
+            $image = $request->file('thumbnail');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $img = $image->storeAs('thumbnails', $imageName, 'public');
+            $imagePath = explode('/', $img);
+            $news->thumb_path = $imagePath[1];
         }
 
         $news->save();
@@ -284,29 +302,31 @@ public function verify(Request $request, User $user)
             'thumbnail.required' => 'Sampul Harus diisi.',
             'thumbnail.image' => 'Sampul harus berupa gambar.',
             'thumbnail.mimes' => 'Format gambar harus jpeg,png,jpg,gif.',
-            'thumbnail.max' => 'Sampul maksimal 2MB.',
+            // 'thumbnail.max' => 'Sampul maksimal 2MB.',
             'body.required' => 'Isi Harus ada.',
         ];
 
         $validateDoc = $request->validate([
             'judul' => 'required|max:255',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif',
             'body' => 'required',
         ], $messages);
 
         if ($request->hasFile('thumbnail')) {
             $image = $request->file('thumbnail');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('thumbnails', $imageName, 'public');
+            $img = $image->storeAs('thumbnails', $imageName, 'public');
+            $imagePath = explode('/', $img);
         }
 
         $user = Auth::user();
 
         $news = News::create([
             'judul' => $validateDoc['judul'],
-            'thumb_path' => $imagePath,
+            'thumb_path' => $imagePath[1],
             'body' => $validateDoc['body'],
-            'excerpt' => Str::limit(strip_tags($request->body), 50),
+            'excerpt' => Str::limit(strip_tags($request->body), 200),
             'user_id' => $user->id,
         ]);
 
@@ -448,7 +468,7 @@ public function infoStore(Request $request)
 
     Info::create($validateDoc);
 
-    return redirect()->route('info', ['Success' => 'Informasi berhasi ditambahkan.']);
+    return redirect()->route('info')->with('success', 'Informasi berhasi ditambahkan.');
 }
 
 public function show($id)

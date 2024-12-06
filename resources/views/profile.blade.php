@@ -4,8 +4,9 @@
 <div class="flex justify-center">
     <div class="">
         <div class="rounded-full overflow-hidden w-60 h-60">
-            <a href="{{ asset("storage/". auth()->user()->img_path) }}" data-baguettebox="gallery">
-                <img class="w-full h-full object-cover" src="{{ asset("storage/". auth()->user()->img_path) }}" alt="">
+            <a href="{{ route("display.profile", auth()->user()->img_path) }}" data-baguettebox="gallery">
+                {{-- <img class="w-full h-full object-cover" src="{{ asset("storage/". auth()->user()->img_path) }}" alt=""> --}}
+                <img class="w-full h-full object-cover" src="{{ route('display.profile',auth()->user()->img_path)}}" alt="">
             </a>
         </div>
         <label class="form-control w-full max-w-xs">

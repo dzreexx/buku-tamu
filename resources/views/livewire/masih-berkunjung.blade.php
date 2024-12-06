@@ -26,12 +26,12 @@
               <td>0{{ $guest->nik }}</td>
               <td>0{{ $guest->telp }}</td>
               <td>
-                <a href="{{ asset('storage/'.$guest->selfie_path) }}" data-baguettebox="gallery">
-                  <img class="h-20" src="{{ asset('storage/'.$guest->selfie_path) }}" alt="">
+                <a href="{{ empty($guest->user_id) ? route("display.guest",$guest->selfie_path) : route("display.profile",$guest->selfie_path) }}" data-baguettebox="gallery">
+                  <img class="h-20" src="{{ empty($guest->user_id) ? route("display.guest",$guest->selfie_path) : route("display.profile",$guest->selfie_path) }}" alt="">
                 </a>
               </td>
               <td>
-                <form action="/checkout/{{ $guest->id }}" method="POST">
+                <form action="/admin/tamu/keluarkan/{{ $guest->id }}" method="POST">
                   @csrf
                 <button type="submit" class="btn btn-error">
                   Keluar

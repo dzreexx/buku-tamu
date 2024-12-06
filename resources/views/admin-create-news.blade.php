@@ -9,7 +9,7 @@
         <div class="label">
           <span class="label-text">Judul Berita</span>
         </div>
-        <input type="text" id="judul" name="judul" placeholder="Type here" class="input @error('judul') input-error @enderror input-bordered w-full max-w-xs" />
+        <input type="text" id="judul" name="judul" placeholder="Type here" class="input @error('judul') input-error @enderror input-bordered w-full max-w-xs" value="{{ old('judul') }}"/>
         @error('judul')    
         <div class="label">
             <span class="label-text-alt text-red-700">{{ $message }}</span>
@@ -33,7 +33,7 @@
     <label for="body">
         <span class="label-text">Isi Berita</span>
             <input id="body" type="hidden" name="body">
-            <trix-editor input="body"></trix-editor>
+            <trix-editor input="body">{{ old('body') }}</trix-editor>
             @error('body')    
         <div class="label">
             <span class="label-text-alt text-red-700">{{ $message }}</span>
